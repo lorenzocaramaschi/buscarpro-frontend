@@ -1,39 +1,56 @@
-// /app/page.js
+"use client"; // Indicate that this is a client component
 
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const API_URL = "https://buscarpro-backend.onrender.com/products";
 
-export default async function HomePage() {
-  try {
-    const response = await fetch(API_URL);
-    if (!response.ok) {
-      throw new Error(
-        `Error de la API: ${response.status} ${response.statusText}`
-      );
-    }
-    const products = await response.json();
+export default function HomePage() {
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const formatPrice = (price) => {
-      return new Intl.NumberFormat("es-AR", { style: "decimal" }).format(price);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+          throw new Error(
+            `Error de la API: ${response.status} ${response.statusText}`
+          );
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    return (
-      <main style={styles.main}>
-        <h1 className="text-4xl sm:text-7xl" style={styles.title}>
-          BuscarPro
-        </h1>
+    fetchProducts();
+  }, []); // Empty dependency array to run once on mount
 
-        {/* Description Section */}
-        <p className="text-md sm:text-2xl" style={styles.description}>
-          Ofrecemos las mejores cámaras de acción y accesorios, para
-          inmortalizar tus nuevas experiencias extremas
-        </p>
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("es-AR", { style: "decimal" }).format(price);
+  };
 
-        {/* Product Grid */}
-        <div style={styles.gridContainer}>
-          {products.map((product) => (
+  return (
+    <main style={styles.main}>
+      <h1 className="text-4xl sm:text-7xl" style={styles.title}>
+        BuscarPro
+      </h1>
+      <p className="text-md sm:text-2xl" style={styles.description}>
+        Ofrecemos las mejores cámaras de acción y accesorios, para inmortalizar
+        tus nuevas experiencias extremas
+      </p>
+
+      {isLoading && <p>Cargando productos...</p>}
+      {error && <p>Error al cargar productos: {error}</p>}
+
+      <div style={styles.gridContainer}>
+        {products.length > 0 ? (
+          products.map((product) => (
             <Link
               key={product._id}
               href={`/product/${product._id}`}
@@ -49,39 +66,37 @@ export default async function HomePage() {
                 <p style={styles.productPrice}>${formatPrice(product.price)}</p>
               </div>
             </Link>
-          ))}
-        </div>
+          ))
+        ) : (
+          <p>No hay productos disponibles.</p>
+        )}
+      </div>
 
-        {/* Footer Section */}
-        <footer style={styles.footer}>
-          <p>© 2024 BuscarPro. Todos los derechos reservados.</p>
-          <div style={styles.footerIcons}>
-            <a
-              href="https://www.instagram.com/buscarpro"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={styles.iconLink}
-              aria-label="Instagram"
-            >
-              <i className="bx bxl-instagram" style={styles.icon}></i>
-            </a>
-            <a
-              href="https://wa.me/5491145310463"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={styles.iconLink}
-              aria-label="WhatsApp"
-            >
-              <i className="bx bxl-whatsapp" style={styles.icon}></i>
-            </a>
-          </div>
-        </footer>
-      </main>
-    );
-  } catch (error) {
-    console.error("Error al obtener productos:", error);
-    return <div>Error al cargar productos. Inténtalo más tarde.</div>;
-  }
+      <footer style={styles.footer}>
+        <p>© 2024 BuscarPro. Todos los derechos reservados.</p>
+        <div style={styles.footerIcons}>
+          <a
+            href="https://www.instagram.com/buscarpro"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.iconLink}
+            aria-label="Instagram"
+          >
+            <i className="bx bxl-instagram" style={styles.icon}></i>
+          </a>
+          <a
+            href="https://wa.me/5491145310463"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.iconLink}
+            aria-label="WhatsApp"
+          >
+            <i className="bx bxl-whatsapp" style={styles.icon}></i>
+          </a>
+        </div>
+      </footer>
+    </main>
+  );
 }
 
 // Define styles as a JavaScript object

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react"; // Import React and hooks
 import Link from "next/link"; // Import Link for navigation
-import Image from "next/image";
 
 const API_URL = "https://buscarpro-backend.onrender.com/products";
 

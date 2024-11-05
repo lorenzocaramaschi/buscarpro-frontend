@@ -40,7 +40,7 @@ export default async function HomePage() {
               style={{ textDecoration: "none" }}
             >
               <div style={styles.productCard}>
-                <Image
+                <img
                   src={product.image}
                   alt={product.name}
                   style={styles.productImage}

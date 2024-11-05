@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react"; // Import React and hooks
 import Link from "next/link"; // Import Link for navigation
+import Image from "next/image";
 
 const API_URL = "https://buscarpro-backend.onrender.com/products";
 
@@ -53,7 +54,7 @@ export default function ProductPage({ params }) {
         </Link>        
       </header>
       <div className="flex flex-col lg:flex-row items-center justify-center m-5">
-        <img
+        <Image
           className="w-full lg:w-5/12 p-2 bg-slate-800 rounded-lg"
           src={product.image}
           alt={product.name}

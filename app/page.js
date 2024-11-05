@@ -1,5 +1,6 @@
 // /app/page.js
 
+import Image from "next/image";
 import Link from "next/link";
 
 const API_URL = "https://buscarpro-backend.onrender.com/products";
@@ -39,7 +40,7 @@ export default async function HomePage() {
               style={{ textDecoration: "none" }}
             >
               <div style={styles.productCard}>
-                <img
+                <Image
                   src={product.image}
                   alt={product.name}
                   style={styles.productImage}
